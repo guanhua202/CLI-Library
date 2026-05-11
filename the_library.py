@@ -1,6 +1,15 @@
 # Beta v0.4
+# ✅ Задача 1. Исправить ошибку в info_book и передавать данные явно
+# ✅ Задача 2. Убрать try/except и сделать безопасный ввод без падений
+# Задача 3. Убрать дублирование кода — создать вспомогательные функции
 
 from time import sleep
+
+THE_LIBRARY = [
+			{"title" : "Бусидо", "author" : "Юдзан Дайдодзи", "year" : "1998", "read" : False},
+			{"title" : "Хагакурэ", "author" : "Юдзан Дайдодзи", "year" : "2000", "read" : False},
+			{"title" : "Метро 2033", "author" : "Дмитрий Глуховский", "year" : "2005", "read" : True}
+]
 
 def start():
 	print("\n         📚 Моя Библиотека\n")
@@ -12,27 +21,27 @@ def start():
 	print("5. Выйти из Библиотеки")
 	print("-------------------------------------")
 
-def book_info(book_num):
-	print(f"\n📔 Информация о книге №{book_num}:")
+def read_status(is_read):
+	return ('Нет 📕', 'Да 📗')[is_read]
+
+def info_book(the_book, number_book):
+	print(f"\n📔 Информация о книге №{number_book}:")
 	print()
-	print(f"Название: {THE_LIBRARY[i]['title']}")
-	print(f"Автор: {THE_LIBRARY[i]['author']}")
-	print(f"Год: {THE_LIBRARY[i]['year']}")
-	print(f"Прочитано: {('Нет 📕', 'Да 📗')[THE_LIBRARY[i]['read']]}")
+	print(f"Название: {the_book['title']}")
+	print(f"Автор: {the_book['author']}")
+	print(f"Год: {the_book['year']}")
+	print(f"Прочитано: {read_status(the_book['read'])}")
+
+def display_books():
+	pass
 
 start()
-
-THE_LIBRARY = [
-			{"title" : "Бусидо", "author" : "Юдзан Дайдодзи", "year" : "1998", "read" : False},
-			{"title" : "Хагакурэ", "author" : "Юдзан Дайдодзи", "year" : "2000", "read" : False},
-			{"title" : "Метро 2033", "author" : "Дмитрий Глуховский", "year" : "2005", "read" : True}
-]
 
 select_option = -1
 
 while select_option != 5:
 
-	book_num = 0
+	number_book = 0
 
 	# Вывести информацию о книгах
 	if select_option == 1:
@@ -47,10 +56,10 @@ while select_option != 5:
 		# Вывести все книги
 		if select_filter == 1:
 			for i in range(0, len(THE_LIBRARY)):
-				book_num += 1
-				book_info(book_num)
-				sleep(1)
-			sleep(1)
+				number_book += 1
+				info_book(THE_LIBRARY[i], number_book)
+				sleep(0.5)
+			sleep(0.5)
 
 		elif select_filter == 2:
 
@@ -62,13 +71,13 @@ while select_option != 5:
 				print(f"\n🔎 Поиск: {search_book}")
 				print("Возможные варианты: ")
 
-				book_num = 0
+				number_book = 0
 
 				for i in range(0, len(THE_LIBRARY)):
 					if search_book in THE_LIBRARY[i]['title']:
-						book_num += 1
-						book_info(book_num)
-					sleep(1)
+						number_book += 1
+						info_book(THE_LIBRARY[i], number_book)
+					sleep(0.5)
 				print("---------------------------")
 
 		# Фильтровать по авторам
@@ -76,11 +85,11 @@ while select_option != 5:
 			
 			author_fio = input("Введите ФИО Автора: ").title()
 			found_author = ""
-			book_num = 0
+			number_book = 0
 			
 			for i in range(0, len(THE_LIBRARY)):
 				if author_fio == THE_LIBRARY[i]['author'].title():
-					found_author = THE_LIBRARY[i]
+					found_author = book
 
 			if found_author == "":
 				print("\nТакого автора нет в Библиотеке!")
@@ -90,9 +99,9 @@ while select_option != 5:
 
 				for i in range(0, len(THE_LIBRARY)):
 					if found_author['author'] in THE_LIBRARY[i]['author']:
-						book_num += 1
-						book_info(book_num)
-						sleep(1)
+						number_book += 1
+						info_book(THE_LIBRARY[i], number_book)
+						sleep(0.5)
 				print("\n-----------------------------------")
 
 		# Фильтровать по статусу прочтения
@@ -101,16 +110,17 @@ while select_option != 5:
 			print("2. Вывести непрочитанные")
 
 			select_category = int(input("Выберите пункт: "))
-			book_num = 0
+			number_book = 0
 
 			# Прочитанные книги
 			if select_category == 1:
 				print("\nНиже прочитанные вами книги:")
 				print("---------------------------")
+
 				for i in range(0, len(THE_LIBRARY)):
 					if THE_LIBRARY[i]['read']:
-						book_num += 1
-						book_info(book_num)
+						number_book += 1
+						info_book(THE_LIBRARY[i], number_book)
 					sleep(0.5)
 				print("---------------------------")
 
@@ -120,34 +130,42 @@ while select_option != 5:
 				print("---------------------------")
 				for i in range(0, len(THE_LIBRARY)):
 					if THE_LIBRARY[i]['read'] == False:
-						book_num += 1
-						book_info(book_num)
+						number_book += 1
+						info_book(THE_LIBRARY[i], number_book)
 					sleep(0.5)
 				print("---------------------------")
 
 	# Добавить книгу
 	elif select_option == 2:
-		name = str(input("Введите название новой книги: "))
-		author = str(input("Автор новой книги: "))
-		date_book = str(input("Дата выхода: "))
-		read_status = int(input("Прочитано/Непрочитано? (1, 2): "))
+		name = input("Введите название новой книги: ")
+		author = input("Автор новой книги: ")
+		date_book = input("Дата выхода: ")
+		is_read = input("Прочитано/Непрочитано? (1, 2): ")
 
-		if read_status == 1:
-			read_status = True
+		while is_read.isdigit() is not True:
+			print("❌ Ошибка. Вы ввели не цифры.")
+			sleep(0.5)
+			is_read = input("Прочитано/Непрочитано? (1, 2): ")
 		else:
-			read_status = False
+			is_read = int(is_read)
 
-		new_book = {"title" : name, "author" : author, "year" : date_book, "read" : read_status}
+			if is_read > 2 or is_read < 1:
+				print("❌ Ошибка. Выберите цифру 1 или 2!")
+			else:
+				if is_read == 1:
+					is_read = True
+				else:
+					is_read = False
 
-		THE_LIBRARY.append(new_book)
-		print("\n📗 Книга успешно добавлена")
-		sleep(1)
-
+				new_book = {"title" : name, "author" : author, "year" : date_book, "read" : is_read}
+				THE_LIBRARY.append(new_book)
+				print("\n📗 Книга успешно добавлена")
+				sleep(0.5)
 	# Изменить статус о прочтении
 	elif select_option == 3:
 		for i in range(0, len(THE_LIBRARY)):
 			print(f"📔 Название: «{THE_LIBRARY[i]['title']}»")
-			print(f"Прочитано: {('Нет 📕', 'Да 📗')[THE_LIBRARY[i]['read']]}\n")
+			print(f"Прочитано: {read_status(THE_LIBRARY[i]['read'])}\n")
 
 		change_status = int(input("Выберите книгу для смены статуса: "))
 		found_book = False
@@ -157,14 +175,15 @@ while select_option != 5:
 		for j in range(0, len(THE_LIBRARY)):
 			if change_status - 1 == j:
 				found_book = True
-				print(f"📔 Название: {THE_LIBRARY[j]['title']}")
+				book = THE_LIBRARY[j]
+				print(f"📔 Название: {book['title']}")
 
-				if THE_LIBRARY[j]['read']:
-					THE_LIBRARY[j]['read'] = False
+				if book['read']:
+					book['read'] = False
 					print(f"\nСтатус: Непрочитано (Только что)")
 					print("---------------------------------")
-				elif THE_LIBRARY[j]['read'] == False:
-					THE_LIBRARY[j]['read'] = True
+				elif book['read'] == False:
+					book['read'] = True
 					print(f"\nСтатус: Прочитано (Только что)")
 					print("---------------------------------")
 
@@ -175,26 +194,28 @@ while select_option != 5:
 	elif select_option == 4:
 
 		found_book = False
-
-		try:
-			delete_book = int(input("Введите № книги для удаления: "))
-		except ValueError:
+		
+		delete_book = input("Введите № книги для удаления: ")
+		
+		while delete_book.isdigit() is not True:
 			print("❌ Ошибка. Вы ввели не цифры.")
 			sleep(0.5)
-			select_option = -1
+			delete_book = input("Введите № книги для удаления: ")
+		else:
+			delete_book = int(delete_book) - 1
 
 		for i in range(0, len(THE_LIBRARY)):
-			if delete_book - 1 == i:
+			if delete_book == i:
 				found_book = True
 				print("Будет удалена следующая книга: \n")
-				book_num = delete_book
-				book_info(book_num)
-				sleep(1)
+				number_book = delete_book
+				info_book(THE_LIBRARY[i], number_book + 1)
+				sleep(0.5)
 				
-				confirm = str(input("Удалить?(Y/N): ")).lower()
-				
+				confirm = str(input("\nУдалить?(Y/N): ")).lower()
+
 				if confirm == 'y':
-					del THE_LIBRARY[i]
+					del THE_LIBRARY[number_book]
 					print("Книга была удалена.")
 					sleep(0.5)
 				elif confirm == 'n':
