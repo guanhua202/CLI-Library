@@ -45,6 +45,13 @@
 #### Improvements and additional changes:
 
 - ✅ Refactoring was carried out
+
+### Beta v0.5
+
+#### Improvements and additional changes:
+
+- ✅ Cleaning the code, closing various bugs
+- ✅ New function "Statistics"
 ------------------------------------------------------------
 
 # Примечания к выпуску (RU 🇷🇺)
@@ -92,3 +99,9 @@
 #### Улучшения и дополнительные изменения:
 
 - ✅ Был проведён Рефакторинг
+
+### Бета v0.5
+#### Улучшения и дополнительные изменения:
+
+- ✅ Чистка кода, закрытие разных багов
+- ✅ Новая функция «Статистика»
